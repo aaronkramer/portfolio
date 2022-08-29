@@ -13,9 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { trpc } from "../../utils/trpc";
-import { redirect } from 'next/dist/server/api-utils';
 import { useRouter } from 'next/router';
-import { signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 const pages = [
   {
@@ -60,75 +59,99 @@ const settings = [
     id: 'profile',
     text: 'Profile',
     redirect: '/profile',
-    acessStatuses: ['loggedIn'],
+    acessStatuses: ['authenticated'],
     isActive: true
   },
   {
     id: 'logout',
     text: 'Logout',
-    redirect: '/api/logout',
-    acessStatuses: ['loggedIn'],
+    redirect: '/api/auth/signout',
+    acessStatuses: ['authenticated'],
     isActive: true
   },
   {
     id: 'signin',
     text: 'Sign In',
     redirect: '/api/auth/signin',
-    acessStatuses: ['loggedOut'],
+    acessStatuses: ['unauthenticated'],
     isActive: true
   },
 
 
 ]
 
-// const settings = [
-//   {
-//     text: 'Profile',
-//     id: 'profile'
-//   },
-//   {
-//     text: 'Account',
-//     id: 'account'
-//   },
-//   {
-//     text: 'Dashboard',
-//     id: 'dashboard'
-//   },
-//   {
-//     text: 'Logout',
-//     id: 'logout'
-//   },
-// ]
+const UserMenu = () => {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+    if (!session) return
+    console.log(session.user)
+  };
+  const handleUserMenuClick = (e) => {
+    e.preventDefault()
+    const setting = settings.find(ar => ar.id === e.currentTarget.id)
+    setting ? router.push(setting.redirect) : null
+  }
+  return (
+    <Box sx={{ flexGrow: 0 }}>
+      <Tooltip title="Open settings">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: '45px' }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}
+        >
+        {(()=>{
+          const visibleSettings = settings.filter(row => row.isActive && row.acessStatuses.includes(status))
+          const renderedSettings = visibleSettings.map((setting) => (
+            <MenuItem id={setting.id} onClick={handleUserMenuClick}>
+              <Typography textAlign="center">{setting.text}</Typography>
+            </MenuItem>
+          ))
+          if (status==='loading') {return <Typography textAlign="center">...</Typography>}
+          return renderedSettings
+        })()
+        }
+      </Menu>
+    </Box>
+  )
+}
 
 const ResponsiveAppBar = () => {
   const router = useRouter()
-  const { data, isLoading } = trpc.useQuery(["pages.getAll"], {
-    initialData: []
-  });
-  const accessStatus = 'loggedOut'
-  const visibleSettings = settings.filter(row => row.isActive && row.acessStatuses.includes(accessStatus))
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleMenuClick = (e) => {
+  const handleMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    // console.log(e.currentTarget.id)
     const page = pages.find(ar => ar.id === e.currentTarget.id)
     page ? router.push(page.redirect) : null
   }
@@ -224,36 +247,7 @@ const ResponsiveAppBar = () => {
               ))}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {visibleSettings.map((setting) => (
-                  <MenuItem key={setting.id} onClick={() => handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting.text}</Typography>
-                    </MenuItem>
-                      )
-                )}
-              </Menu>
-            </Box>
+            <UserMenu />
           </Toolbar>
         </Container>
       </AppBar>
