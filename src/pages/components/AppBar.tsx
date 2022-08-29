@@ -84,14 +84,14 @@ const UserMenu = () => {
   const router = useRouter()
   const { data: session, status } = useSession()
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  
+  const userImage = session && session.user && session.user.image && session.user.image
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-    if (!session) return
-    console.log(session.user)
+    if (!userImage) return
+    console.log(userImage)
   };
   const handleUserMenuClick = (e) => {
     e.preventDefault()
@@ -102,7 +102,7 @@ const UserMenu = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          <Avatar src={userImage} />
         </IconButton>
       </Tooltip>
       <Menu
