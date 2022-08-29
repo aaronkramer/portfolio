@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { trpc } from "../../utils/trpc";
 import { redirect } from 'next/dist/server/api-utils';
 import { useRouter } from 'next/router';
+import { signIn } from "next-auth/react"
 
 const pages = [
   {
@@ -72,7 +73,7 @@ const settings = [
   {
     id: 'signin',
     text: 'Sign In',
-    redirect: '/api/login',
+    redirect: '/api/auth/signin',
     acessStatuses: ['loggedOut'],
     isActive: true
   },
@@ -104,7 +105,7 @@ const ResponsiveAppBar = () => {
   const { data, isLoading } = trpc.useQuery(["pages.getAll"], {
     initialData: []
   });
-  const accessStatus = 'loggedIn'
+  const accessStatus = 'loggedOut'
   const visibleSettings = settings.filter(row => row.isActive && row.acessStatuses.includes(accessStatus))
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
