@@ -93,7 +93,7 @@ const UserMenu = () => {
     if (!userImage) return
     console.log(userImage)
   };
-  const handleUserMenuClick = (e) => {
+  const handleUserMenuClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault()
     const setting = settings.find(ar => ar.id === e.currentTarget.id)
     setting ? router.push(setting.redirect) : null
@@ -102,7 +102,7 @@ const UserMenu = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar src={userImage} />
+          <Avatar src={userImage || ''} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -124,7 +124,7 @@ const UserMenu = () => {
         {(()=>{
           const visibleSettings = settings.filter(row => row.isActive && row.acessStatuses.includes(status))
           const renderedSettings = visibleSettings.map((setting) => (
-            <MenuItem id={setting.id} onClick={handleUserMenuClick}>
+            <MenuItem key={setting.id} id={setting.id} onClick={handleUserMenuClick}>
               <Typography textAlign="center">{setting.text}</Typography>
             </MenuItem>
           ))
@@ -239,6 +239,7 @@ const ResponsiveAppBar = () => {
                 <Button
                   // redirect={page.redirect}
                   onClick={handleMenuClick}
+                  key={page.id}
                   id={page.id}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >

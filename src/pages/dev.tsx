@@ -28,7 +28,7 @@ const Home: NextPage = () => {
         <ResponsiveAppBar></ResponsiveAppBar>
         <p>Dev</p>
         <ul style={{textAlign: 'left', marginTop: '2rem'}}>
-          {projects.map((project) => <li>{project}</li>)}
+          {projects.map((project) => <li key={project}>{project}</li>)}
         </ul>
 
       </div>

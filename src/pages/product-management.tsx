@@ -8,6 +8,7 @@ import parse from 'html-react-parser';
 
 const projects = [
   {
+    key: 1,
     title: "The Service Request Workflow",
     article: `<p>The Service Request (SR) process had a number of issues. These mainly related to proper handoffs, ownership and defining the boundaries of what is a service request from other organizations. Service requests were often conflated with bug reporting and updates related to Professional Services. To help improve this process we started by sitting down and interviewing all internal stakeholders that were impacted downstream by SRs.</p>
     <img
@@ -26,6 +27,7 @@ const projects = [
     shown: true
   },
   {
+    key: 2,
     title: "Professional Service Work Package Workflow (v1, v2, v3)",
     article: `The platform we provide is highly configurable and can be customized to meet the specific needs of a client. However, this also means that there is a lot of work that needs to be done in order to set up the platform for a new client, including developing new integrations, setting up infrastructure, and sometimes adding new screens. Because of this, a significant portion of our revenue still comes from professional services and implementations.
 
@@ -43,6 +45,7 @@ const projects = [
 
   },
   {
+    key: 3,
     title: "Release Notes Handoffs",
     article: ``,
     image: "",
@@ -50,6 +53,7 @@ const projects = [
 
   },
   {
+    key: 4,
     title: "Engineering Jira Design",
     article: ``,
     image: "",
@@ -57,6 +61,7 @@ const projects = [
 
   },
   {
+    key: 5,
     title: "FHIR Implementation Design",
     article: ``,
     image: "",
@@ -85,7 +90,7 @@ const Home: NextPage = () => {
         <div style={{ textAlign: 'center', alignItems: 'center', display: 'inline-block', width: '60%' }}>
           {parse(exampleDev)}
           {projects.map((project) =>
-            <Box>
+            <Box key={project.key}>
               <Typography variant='h3' style={{ textAlign: 'center' }}>{project.title}</Typography>
               {
                 project.image ?
