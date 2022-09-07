@@ -5,6 +5,8 @@ import ResponsiveAppBar from "./components/AppBar";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import parse from 'html-react-parser';
+import Article from './components/Article'
+
 
 const projects = [
   {
@@ -70,6 +72,27 @@ const projects = [
   },
 ]
 
+const newArt = {
+  key: 1,
+  title: "The Service Request Workflow",
+  article: `<p>The Service Request (SR) process had a number of issues. These mainly related to proper handoffs, ownership and defining the boundaries of what is a service request from other organizations. Service requests were often conflated with bug reporting and updates related to Professional Services. To help improve this process we started by sitting down and interviewing all internal stakeholders that were impacted downstream by SRs.</p>
+  <img
+    style={textAlign: 'center'}
+    src="/AllasFonso_project_management_article_image_people_standing_aro_c0b43c36-0103-4c29-8580-15adfcff5b19.png"
+    alt="The Service Request Workflow"
+    loading="lazy"
+    height=450
+  />
+  <p>We found that these groups fell into four categories and were able to define requests off of those types from there. Using Smartsheet forms, we created a service request intake form with branching logic related to the type of request being performed. Branching logic was very beneficial because it allowed us to gather more information from the client end and drastically reduce the number of back and forth required to close out their request.
+  By the end of the project, we were able to reduce the number of average handoffs from 3 / request to less than one. We found that every handoffs would add anywhere between half a day and a few days each request, so this effectively reduced service request turnaround time by about half of a week. Seeing as we receive about 20 to 40 service requests a week, this reduced service request total open time by about a year every month.
+  
+  We also saw drastic improvements in the quality of service requests. Before, because there was no clear definition of what a service request was, we would often get requests that were really bugs that should have been reported elsewhere. By defining the boundaries of what a service request is, and what it is not, we were able to funnel those requests to the proper channels and increase the overall quality of service requests.
+  </p>`,
+  image: "/AllasFonso_project_management_article_image_people_standing_aro_c0b43c36-0103-4c29-8580-15adfcff5b19.png",
+  shown: true
+},
+
+
 const exampleDev = ``
 
 const Home: NextPage = () => {
@@ -87,6 +110,9 @@ const Home: NextPage = () => {
       }}>
         <ResponsiveAppBar></ResponsiveAppBar>
         <p>Projects</p>
+      <Article id={"12"} title={"A Test"} article={"<p>is this working?</p>"} />
+      
+      <p>old below</p>
         <div style={{ textAlign: 'center', alignItems: 'center', display: 'inline-block', width: '60%' }}>
           {parse(exampleDev)}
           {projects.map((project) =>
